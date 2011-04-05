@@ -6,7 +6,7 @@ OBJS= main.o Query.o QueryProcessor.o
 HDRS= Query.h QueryProcessor.h boot.h util.h
 BINS= inQuery
 
-all: $(BINS) run done
+all: $(BINS) done
 
 $(BINS): $(OBJS) $(HDRS)
 	$(CXX) -o $@ $(CFLAGS) $(OBJS) -lz
@@ -23,4 +23,4 @@ run:
 	./$(BINS)
 
 done:
-	echo "Done running"
+	echo "Done making\n"
