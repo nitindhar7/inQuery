@@ -1,5 +1,2 @@
-*.layout
-*.depend
-*.cbp
-bin
-obj
+*.o
+inQuery
