@@ -13,17 +13,16 @@ struct node {
 
 class Query
 {
-	public:
-	    string text;
+    public:
+        string text;
         int count;
         Query(string);
-	    node* open_list(Lexicon &, LexiconCursor &);
+        node* open_list(map<string, int> &, map<string, int>::iterator &);
+        int get_frequency(int, node*);
+        //void close_list(node*);
     private:
-        int get_offset(Lexicon &, LexiconCursor &);
+        int get_offset(map<string, int> &, map<string, int>::iterator &);
         string get_inverted_list(int);
 };
 
 #endif
-
-//void close_list(node*);
-        //int get_frequency(int);

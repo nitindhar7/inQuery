@@ -5,21 +5,12 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include "page_stats.h"
 using namespace std;
-
-struct page_stats {
-    string url;
-    int page_size;
-};
-
-typedef map<string, int> Lexicon;
-typedef map<string, int>::iterator LexiconCursor;
-typedef map<int, page_stats> UrlTable;
-typedef map<int, page_stats>::iterator UrlTableCursor;
 
 namespace boot
 {
-    void load_lexicon(Lexicon &lexicon)
+    void load_lexicon(map<string, int> &lexicon)
     {
         string line, word;
         int offset;
@@ -29,7 +20,9 @@ namespace boot
         cout << "* Loading Lexicon... ";
 
         while( !lexicon_file.eof() ) {
-            lexicon_file >> word >> offset;
+            getline( lexicon_file, line );
+            stringstream parseable_line( line );
+            parseable_line >> word >> offset;
             lexicon[word] = offset;
         }
 
@@ -37,10 +30,10 @@ namespace boot
         lexicon_file.close();
     }
 
-    void  load_url_table(UrlTable &url_table)
+    void  load_url_table(map<int, page_stats> &url_table)
     {
         page_stats stats;
-        string url;
+        string url, line;
         int doc_id, page_size;
         ifstream url_table_file;
 
@@ -48,7 +41,10 @@ namespace boot
         cout << "* Loading URL Table... ";
 
         while( !url_table_file.eof() ) {
-            url_table_file >> doc_id >> page_size >> url;
+            getline( url_table_file, line );
+            stringstream parseable_line( line );
+        
+            parseable_line >> doc_id >> page_size >> url;
             stats.page_size = page_size;
             stats.url = url;
             url_table[doc_id] = stats;
@@ -58,7 +54,7 @@ namespace boot
         url_table_file.close();
     }
 
-    void init(Lexicon &lexicon, UrlTable &url_table)
+    void init(map<string, int> &lexicon, map<int, page_stats> &url_table)
     {
         cout << "Booting Query Processor" << endl;
         load_lexicon( lexicon );

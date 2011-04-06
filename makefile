@@ -1,15 +1,14 @@
-CC= gcc
 CXX= g++
 CFLAGS=
-SRCS= main.cpp Query.cpp QueryProcessor.cpp
-OBJS= main.o Query.o QueryProcessor.o
-HDRS= Query.h QueryProcessor.h boot.h util.h
+SRCS= main.cpp QueryProcessor.cpp Query.cpp
+OBJS= main.o QueryProcessor.o Query.o
+HDRS= page_stats.h boot.h QueryProcessor.h Query.h
 BINS= inQuery
 
 all: $(BINS) done
 
 $(BINS): $(OBJS) $(HDRS)
-	$(CXX) -o $@ $(CFLAGS) $(OBJS) -lz
+	$(CXX) -o $@ $(CFLAGS) $(OBJS)
 
 $(OBJS): $(SRCS) $(HDRS)
 	$(CXX) -c $(CFLAGS) $(SRCS)
@@ -23,4 +22,4 @@ run:
 	./$(BINS)
 
 done:
-	echo "Done making\n"
+	@echo "Done making: 'make run'"
