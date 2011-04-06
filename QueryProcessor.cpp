@@ -4,8 +4,6 @@
 #include <cstring>
 #include <fstream>
 #include <sstream>
-#include <algorithm>
-#include <string>
 #include <cmath>
 #include "QueryProcessor.h"
 
@@ -18,6 +16,8 @@ map<int, page_stats> QueryProcessor::url_table;
 
 QueryProcessor::QueryProcessor()
 {
+    num_queries = 0;
+    max_doc_id = 0;
     boot();
 }
 
@@ -26,14 +26,7 @@ QueryProcessor::~QueryProcessor()
     clear_structures();
 }
 
-void QueryProcessor::init(int query_count, vector<Query> user_queries)
-{
-    num_queries = query_count;
-    queries = user_queries;
-    max_doc_id = 0;
-}
-
-vector<Query> QueryProcessor::get_queries()
+vector<Query> & QueryProcessor::get_queries()
 {
     return queries;
 }
@@ -50,22 +43,20 @@ int QueryProcessor::get_max_doc_id()
 
 int QueryProcessor::get_max_doc_id(vector<node*> inverted_lists)
 {
-    int maximum_doc_id = 0;
-    
     for( int i = 0; i < num_queries; i++ ) {
         node* temp = inverted_lists[i];
 
         while( temp->next != NULL )
             temp = temp->next;
         
-        if( maximum_doc_id < temp->doc_id )
-            maximum_doc_id = temp->doc_id;
+        if( max_doc_id < temp->doc_id )
+            max_doc_id = temp->doc_id;
     }
     
-    return maximum_doc_id;
+    return max_doc_id;
 }
 
-int QueryProcessor::nextGEQ( node* list_head, int doc_id)
+int QueryProcessor::next_geq( node* list_head, int doc_id)
 {
     node* head = NULL;
 
@@ -85,31 +76,8 @@ void QueryProcessor::clear_structures()
     url_table.clear();
 }
 
-void QueryProcessor::quit_if_requested(string user_input)
+void QueryProcessor::collect_queries(string user_input)
 {
-    if( !user_input.compare( "quit" ) ) {
-        clear_structures();
-        exit( 0 );
-    }
-}
-
-string QueryProcessor::search_or_quit()
-{
-    string user_input;
-
-    cout << "Search or 'QUIT' to quit: ";
-    getline( cin, user_input );
-
-    transform( user_input.begin(), user_input.end(), user_input.begin(), ::tolower );
-
-    quit_if_requested( user_input );
-
-    return user_input;
-}
-
-int QueryProcessor::collect_queries(string user_input, vector<Query> &queries)
-{
-    int num_queries = 0;
     string tmp_query;
     stringstream user_input_stream( user_input );
 
@@ -118,8 +86,12 @@ int QueryProcessor::collect_queries(string user_input, vector<Query> &queries)
         queries.push_back( query );
         num_queries++;
     }
+}
 
-    return num_queries;
+void QueryProcessor::show_queries()
+{
+    for( int i = 0; i < num_queries; i++ )
+        cout << i << ". " << queries[i].get_text() << endl;
 }
 
 void QueryProcessor::load_lexicon()

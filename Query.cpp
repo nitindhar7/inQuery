@@ -20,7 +20,7 @@ node* Query::open_list(map<string, int> &lexicon)
     node* head = NULL;
 
     offset = get_offset( lexicon );
-    inverted_list = get_inverted_list( offset ); // remember to seek to beg after done
+    inverted_list = get_inverted_list( offset );
 
     stringstream parseable_inverted_list( inverted_list );
 
@@ -84,6 +84,16 @@ int Query::get_frequency(int document_id, node* head)
     }
     
     return frequency;
+}
+
+string Query::get_text()
+{
+    return text;
+}
+
+int Query::get_count()
+{
+    return count;
 }
 
 /*void Query::close_list(node* head)

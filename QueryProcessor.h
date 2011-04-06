@@ -16,20 +16,18 @@ class QueryProcessor
     public:
         QueryProcessor();
         ~QueryProcessor();
-        void init(int, vector<Query>);
-        vector<Query> get_queries();
+        vector<Query> & get_queries();
         int get_num_queries();
         int get_max_doc_id();
         int get_max_doc_id(vector<node*>);
-        int nextGEQ(node*, int);
+        int next_geq(node*, int);
+        void collect_queries(string);
+        void show_queries();
         /*double calculate_rank(int);
         string get_url(int);
         void add_to_heap(string, int);*/
         
         static void clear_structures();
-        static void quit_if_requested(string);
-        static string search_or_quit();
-        static int collect_queries(string, vector<Query> &);
         static map<string, int> & get_lexicon();
     private:
         void boot();
