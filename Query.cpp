@@ -13,13 +13,13 @@ Query::Query(string query)
     count = 0;
 }
 
-node* Query::open_list(map<string, int> &lexicon, map<string, int>::iterator &lexicon_cursor)
+node* Query::open_list(map<string, int> &lexicon)
 {
     int offset = 0, doc_id = 0, frequency = 0;
     string inverted_list;
     node* head = NULL;
 
-    offset = get_offset( lexicon, lexicon_cursor );
+    offset = get_offset( lexicon );
     inverted_list = get_inverted_list( offset ); // remember to seek to beg after done
 
     stringstream parseable_inverted_list( inverted_list );
@@ -49,8 +49,9 @@ node* Query::open_list(map<string, int> &lexicon, map<string, int>::iterator &le
     return head;
 }
 
-int Query::get_offset(map<string, int> &lexicon, map<string, int>::iterator &lexicon_cursor)
+int Query::get_offset(map<string, int> &lexicon)
 {
+    map<string, int>::iterator lexicon_cursor;
     lexicon_cursor = lexicon.find( text );
     return ( *lexicon_cursor ).second;
 }

@@ -17,11 +17,11 @@ class Query
         string text;
         int count;
         Query(string);
-        node* open_list(map<string, int> &, map<string, int>::iterator &);
+        node* open_list(map<string, int> &);
         int get_frequency(int, node*);
         //void close_list(node*);
     private:
-        int get_offset(map<string, int> &, map<string, int>::iterator &);
+        int get_offset(map<string, int> &);
         string get_inverted_list(int);
 };
 

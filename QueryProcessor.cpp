@@ -13,16 +13,44 @@
 #define CONSTANT_B 0.75
 using namespace std;
 
-QueryProcessor::QueryProcessor(int query_count, vector<Query> user_queries)
+map<string, int> QueryProcessor::lexicon;
+map<int, page_stats> QueryProcessor::url_table;
+
+QueryProcessor::QueryProcessor()
+{
+    boot();
+}
+
+QueryProcessor::~QueryProcessor()
+{
+    clear_structures();
+}
+
+void QueryProcessor::init(int query_count, vector<Query> user_queries)
 {
     num_queries = query_count;
     queries = user_queries;
     max_doc_id = 0;
 }
 
+vector<Query> QueryProcessor::get_queries()
+{
+    return queries;
+}
+
+int QueryProcessor::get_num_queries()
+{
+    return num_queries;
+}
+
+int QueryProcessor::get_max_doc_id()
+{
+    return max_doc_id;
+}
+
 int QueryProcessor::get_max_doc_id(vector<node*> inverted_lists)
 {
-    int max_doc_id = 0;
+    int maximum_doc_id = 0;
     
     for( int i = 0; i < num_queries; i++ ) {
         node* temp = inverted_lists[i];
@@ -30,11 +58,11 @@ int QueryProcessor::get_max_doc_id(vector<node*> inverted_lists)
         while( temp->next != NULL )
             temp = temp->next;
         
-        if( max_doc_id < temp->doc_id )
-            max_doc_id = temp->doc_id;
+        if( maximum_doc_id < temp->doc_id )
+            maximum_doc_id = temp->doc_id;
     }
     
-    return max_doc_id;
+    return maximum_doc_id;
 }
 
 int QueryProcessor::nextGEQ( node* list_head, int doc_id)
@@ -51,21 +79,21 @@ int QueryProcessor::nextGEQ( node* list_head, int doc_id)
     return -1;
 }
 
-void QueryProcessor::clear_structures(map<string, int> &lexicon, map<int, page_stats> &url_table)
+void QueryProcessor::clear_structures()
 {
     lexicon.clear();
     url_table.clear();
 }
 
-void QueryProcessor::quit_if_requested(string user_input, map<string, int> &lexicon, map<int, page_stats> &url_table)
+void QueryProcessor::quit_if_requested(string user_input)
 {
     if( !user_input.compare( "quit" ) ) {
-        clear_structures( lexicon, url_table );
+        clear_structures();
         exit( 0 );
     }
 }
 
-string QueryProcessor::search_or_quit(map<string, int> &lexicon, map<int, page_stats> &url_table)
+string QueryProcessor::search_or_quit()
 {
     string user_input;
 
@@ -74,7 +102,7 @@ string QueryProcessor::search_or_quit(map<string, int> &lexicon, map<int, page_s
 
     transform( user_input.begin(), user_input.end(), user_input.begin(), ::tolower );
 
-    quit_if_requested( user_input, lexicon, url_table );
+    quit_if_requested( user_input );
 
     return user_input;
 }
@@ -92,6 +120,62 @@ int QueryProcessor::collect_queries(string user_input, vector<Query> &queries)
     }
 
     return num_queries;
+}
+
+void QueryProcessor::load_lexicon()
+{
+    string line, word;
+    int offset;
+    ifstream lexicon_file;
+
+    lexicon_file.open( "data/lexicon" );
+    cout << "* Loading Lexicon... ";
+
+    while( !lexicon_file.eof() ) {
+        getline( lexicon_file, line );
+        stringstream parseable_line( line );
+        parseable_line >> word >> offset;
+        lexicon[word] = offset;
+    }
+
+    cout << "[DONE]" << endl;
+    lexicon_file.close();
+}
+
+void QueryProcessor::load_url_table()
+{
+    page_stats stats;
+    string url, line;
+    int doc_id, page_size;
+    ifstream url_table_file;
+
+    url_table_file.open( "data/url_table" );
+    cout << "* Loading URL Table... ";
+
+    while( !url_table_file.eof() ) {
+        getline( url_table_file, line );
+        stringstream parseable_line( line );
+    
+        parseable_line >> doc_id >> page_size >> url;
+        stats.page_size = page_size;
+        stats.url = url;
+        url_table[doc_id] = stats;
+    }
+
+    cout << "[DONE]" << endl << endl;
+    url_table_file.close();
+}
+
+void QueryProcessor::boot()
+{
+    cout << "Booting Query Processor" << endl;
+    load_lexicon();
+    load_url_table();
+}
+
+map<string, int> & QueryProcessor::get_lexicon()
+{
+    return QueryProcessor::lexicon;
 }
 /*
 double QueryProcessor::calculate_rank(int doc_id)
