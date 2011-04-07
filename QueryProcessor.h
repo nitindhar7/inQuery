@@ -14,12 +14,13 @@ using namespace std;
 class QueryProcessor
 {
     public:
+        // per object
         QueryProcessor();
         ~QueryProcessor();
         vector<Query> & get_queries();
         int get_num_queries();
         int get_max_doc_id();
-        int get_max_doc_id(vector<node*>);
+        void set_max_doc_id(vector<node*>);
         int next_geq(node*, int);
         void collect_queries(string);
         void show_queries();
@@ -27,16 +28,20 @@ class QueryProcessor
         string get_url(int);
         void add_to_heap(string, int);*/
         
+        // for all query processors
         static void clear_structures();
         static map<string, int> & get_lexicon();
+
     private:
+        // per object
         void boot();
         void load_lexicon();
         void load_url_table();
-
         vector<Query> queries;
         int num_queries;
         int max_doc_id;
+        
+        // for all query processors
         static map<string, int> lexicon;
         static map<int, page_stats> url_table;
 };

@@ -30,26 +30,34 @@ int main()
             node* head = query_processor.get_queries()[i].open_list( QueryProcessor::get_lexicon() );
             inverted_lists.push_back( head );
         }
+        
+        query_processor.set_max_doc_id( inverted_lists );
 
         // CALC SCORES USING BM25, nextGEQ, freq, add to heap etc, etc
         int doc_id = 0;
         int new_doc_id = 0;
         int frequency = 0;
-        int max_doc_id = query_processor.get_max_doc_id( inverted_lists );
+        int max_doc_id = query_processor.get_max_doc_id();
         while( doc_id <= max_doc_id ) {
             doc_id = query_processor.next_geq( inverted_lists[0], doc_id );
-            
-            /*for( int i = 1; i < query_processor.get_num_queries() && ( new_doc_id = query_processor.nextGEQ( inverted_lists[1], doc_id ) ) == doc_id; i++ );
-            
+
+            for( int i = 1; i < query_processor.get_num_queries() && ( new_doc_id = query_processor.next_geq( inverted_lists[i], doc_id ) ) == doc_id; i++ );
+            // doc_id = 9638
+            // new_doc_id = 19022
             if( new_doc_id > doc_id )
                 doc_id = new_doc_id;
             else {
-                for( int i = 0; i < query_processor.get_num_queries(); i++ ) {
+                /*for( int i = 0; i < query_processor.get_num_queries(); i++ ) {
                     frequency = query_processor.get_queries()[i].get_frequency( doc_id, inverted_lists[i] );
                     cout << frequency << endl;
-                }
+                }*/
+                
+                // BM25
+                
                 doc_id++;
-            }*/
+            }
+            // doc_id = 19022
+            // new_doc_id = 19022
         }
 
         // loop num_queries: queryies[i].close_list()

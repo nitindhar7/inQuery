@@ -41,7 +41,7 @@ int QueryProcessor::get_max_doc_id()
     return max_doc_id;
 }
 
-int QueryProcessor::get_max_doc_id(vector<node*> inverted_lists)
+void QueryProcessor::set_max_doc_id(vector<node*> inverted_lists)
 {
     for( int i = 0; i < num_queries; i++ ) {
         node* temp = inverted_lists[i];
@@ -52,20 +52,16 @@ int QueryProcessor::get_max_doc_id(vector<node*> inverted_lists)
         if( max_doc_id < temp->doc_id )
             max_doc_id = temp->doc_id;
     }
-    
-    return max_doc_id;
 }
 
-int QueryProcessor::next_geq( node* list_head, int doc_id)
+int QueryProcessor::next_geq(node* head, int doc_id)
 {
-    node* head = NULL;
+    node* temp = head;
 
-    head = list_head;
-
-    if( head->doc_id >= doc_id )
-        return head->doc_id;
+    if( temp->doc_id >= doc_id )
+        return temp->doc_id;
     else
-        head = head->next;
+        temp = temp->next;
 
     return -1;
 }
