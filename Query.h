@@ -19,7 +19,7 @@ class Query
         int get_frequency(int, node*);
         string get_text();
         int get_count();
-        //void close_list(node*);
+        void close_list(node*);
     private:
         int get_offset(map<string, int> &);
         string get_inverted_list(int);

@@ -24,8 +24,9 @@ class QueryProcessor
         int next_geq(node*, int);
         void collect_queries(string);
         void show_queries();
-        /*double calculate_rank(int);
         string get_url(int);
+        void clear_queries();
+        /*double calculate_rank(int);
         void add_to_heap(string, int);*/
         
         // for all query processors

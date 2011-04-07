@@ -31,6 +31,11 @@ vector<Query> & QueryProcessor::get_queries()
     return queries;
 }
 
+void QueryProcessor::clear_queries()
+{
+    queries.clear();
+}
+
 int QueryProcessor::get_num_queries()
 {
     return num_queries;
@@ -56,13 +61,27 @@ void QueryProcessor::set_max_doc_id(vector<node*> inverted_lists)
 
 int QueryProcessor::next_geq(node* head, int doc_id)
 {
-    node* temp = head;
+    /*node* temp = head;
 
     if( temp->doc_id >= doc_id )
         return temp->doc_id;
     else
         temp = temp->next;
 
+    return -1;*/
+    //cout << "in next_geq" << endl;
+    
+    while( head != NULL ) {
+        //cout << "doc_id: " << doc_id << endl;
+        //cout << "head->doc_id: " << head->doc_id << endl;
+
+        if( head->doc_id >= doc_id )
+            return head->doc_id;
+        head = head->next;
+        
+        //system ("sleep 2");
+    }
+    
     return -1;
 }
 
@@ -145,6 +164,14 @@ map<string, int> & QueryProcessor::get_lexicon()
 {
     return QueryProcessor::lexicon;
 }
+
+string QueryProcessor::get_url(int doc_id)
+{
+    map<int, page_stats>::iterator url_table_cursor;
+    url_table_cursor = url_table.find( doc_id );
+    return ( *url_table_cursor ).second.url;
+}
+
 /*
 double QueryProcessor::calculate_rank(int doc_id)
 {
@@ -162,12 +189,6 @@ double QueryProcessor::calculate_rank(int doc_id)
     page_rank = log_result * freq_result;
 
     return page_rank;
-}
-
-string QueryProcessor::get_url(int doc_id)
-{
-    url_table_iterator = kyon_url_table.find( doc_id );
-    return ( *url_table_iterator ).second.url;
 }
 
 void QueryProcessor::add_to_heap(string url, int doc_id)

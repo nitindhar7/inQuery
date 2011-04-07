@@ -96,9 +96,7 @@ int Query::get_count()
     return count;
 }
 
-/*void Query::close_list(node* head)
+void Query::close_list(node* head)
 {
     free( head );
 }
-
-*/

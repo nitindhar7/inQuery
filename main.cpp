@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <list>
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -38,33 +39,52 @@ int main()
         int new_doc_id = 0;
         int frequency = 0;
         int max_doc_id = query_processor.get_max_doc_id();
+        list<int> result_list;
+        list<int>::iterator result_list_cursor;
+        
         while( doc_id <= max_doc_id ) {
             doc_id = query_processor.next_geq( inverted_lists[0], doc_id );
+            
+            if( doc_id == -1 )
+                break;
 
             for( int i = 1; i < query_processor.get_num_queries() && ( new_doc_id = query_processor.next_geq( inverted_lists[i], doc_id ) ) == doc_id; i++ );
-            // doc_id = 9638
-            // new_doc_id = 19022
-            if( new_doc_id > doc_id )
+
+            if( new_doc_id == -1 )
+                break;
+            else if( new_doc_id > doc_id )
                 doc_id = new_doc_id;
             else {
+                result_list.push_back( new_doc_id );
                 /*for( int i = 0; i < query_processor.get_num_queries(); i++ ) {
                     frequency = query_processor.get_queries()[i].get_frequency( doc_id, inverted_lists[i] );
                     cout << frequency << endl;
                 }*/
                 
+                
+                
                 // BM25
                 
                 doc_id++;
             }
-            // doc_id = 19022
-            // new_doc_id = 19022
         }
 
         // loop num_queries: queryies[i].close_list()
 
         // display results
+        for( result_list_cursor = result_list.begin(); result_list_cursor != result_list.end(); result_list_cursor++ )
+            cout << *result_list_cursor << ": " << query_processor.get_url( *result_list_cursor ) << endl;
         
-        // clear the containers in query_processor
+        // clear the containers in query_processor        
+        for( int i = 0; i < query_processor.get_num_queries(); i++ ) {
+            query_processor.get_queries()[i].close_list( inverted_lists[i] );
+        }
+
+        //query_processor.clear_queries();
+        inverted_lists.clear();
+        result_list.clear();
+        
+        cout << endl;
     }
 
     return 0;
