@@ -19,8 +19,6 @@ int main()
 {
     QueryProcessor query_processor;
 
-    // get average page length somehow.
-
     while( true ) {
         vector<node*> inverted_lists;
         string user_input = search_or_quit();
@@ -69,24 +67,17 @@ int main()
             }
         }
 
-        // loop num_queries: queryies[i].close_list()
-
         // display results
         for( result_list_cursor = result_list.begin(); result_list_cursor != result_list.end(); result_list_cursor++ )
             cout << *result_list_cursor << ": " << query_processor.get_url( *result_list_cursor ) << endl;
-        
-        // clear the containers in query_processor        
-        for( int i = 0; i < query_processor.get_num_queries(); i++ ) {
-            query_processor.get_queries()[i].close_list( inverted_lists[i] );
-        }
 
-        //query_processor.clear_queries();
+        query_processor.close_query_lists( inverted_lists );
+        query_processor.reset();
         inverted_lists.clear();
-        result_list.clear();
-        
-        cout << endl;
+        result_list.clear();        
     }
 
+    cout << endl;
     return 0;
 }
 

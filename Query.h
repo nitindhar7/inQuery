@@ -15,6 +15,7 @@ class Query
 {
     public:
         Query(string);
+        ~Query();
         node* open_list(map<string, int> &);
         int get_frequency(int, node*);
         string get_text();

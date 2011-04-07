@@ -13,6 +13,8 @@ Query::Query(string query)
     count = 0;
 }
 
+Query::~Query() {}
+
 node* Query::open_list(map<string, int> &lexicon)
 {
     int offset = 0, doc_id = 0, frequency = 0;

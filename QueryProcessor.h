@@ -25,12 +25,15 @@ class QueryProcessor
         void collect_queries(string);
         void show_queries();
         string get_url(int);
-        void clear_queries();
+        void close_query_lists(vector<node*> &);
+        void reset();
+        void set_avg_doc_length();
         /*double calculate_rank(int);
         void add_to_heap(string, int);*/
         
         // for all query processors
         static void clear_structures();
+        static int get_avg_doc_length();
         static map<string, int> & get_lexicon();
 
     private:
@@ -45,6 +48,7 @@ class QueryProcessor
         // for all query processors
         static map<string, int> lexicon;
         static map<int, page_stats> url_table;
+        static int avg_doc_length;
 };
 
 #endif

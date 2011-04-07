@@ -13,12 +13,15 @@ using namespace std;
 
 map<string, int> QueryProcessor::lexicon;
 map<int, page_stats> QueryProcessor::url_table;
+int QueryProcessor::avg_doc_length;
 
 QueryProcessor::QueryProcessor()
 {
     num_queries = 0;
     max_doc_id = 0;
+    avg_doc_length = 0;
     boot();
+    set_avg_doc_length();
 }
 
 QueryProcessor::~QueryProcessor()
@@ -31,9 +34,11 @@ vector<Query> & QueryProcessor::get_queries()
     return queries;
 }
 
-void QueryProcessor::clear_queries()
+void QueryProcessor::reset()
 {
     queries.clear();
+    num_queries = 0;
+    max_doc_id = 0;
 }
 
 int QueryProcessor::get_num_queries()
@@ -44,6 +49,11 @@ int QueryProcessor::get_num_queries()
 int QueryProcessor::get_max_doc_id()
 {
     return max_doc_id;
+}
+
+int QueryProcessor::get_avg_doc_length()
+{
+    return avg_doc_length;
 }
 
 void QueryProcessor::set_max_doc_id(vector<node*> inverted_lists)
@@ -59,27 +69,27 @@ void QueryProcessor::set_max_doc_id(vector<node*> inverted_lists)
     }
 }
 
+void QueryProcessor::set_avg_doc_length()
+{
+    int total_length = 0;
+    map<int, page_stats>::iterator url_table_cursor;
+    
+    cout << "* Calculating Average Document Length... ";
+    
+    for( url_table_cursor = url_table.begin(); url_table_cursor != url_table.end(); url_table_cursor++ )
+        total_length += ( *url_table_cursor ).second.page_size;
+        
+    avg_doc_length = total_length / url_table.size();
+
+    cout << "[" << avg_doc_length << "]" << endl << endl;    
+}
+
 int QueryProcessor::next_geq(node* head, int doc_id)
 {
-    /*node* temp = head;
-
-    if( temp->doc_id >= doc_id )
-        return temp->doc_id;
-    else
-        temp = temp->next;
-
-    return -1;*/
-    //cout << "in next_geq" << endl;
-    
     while( head != NULL ) {
-        //cout << "doc_id: " << doc_id << endl;
-        //cout << "head->doc_id: " << head->doc_id << endl;
-
         if( head->doc_id >= doc_id )
             return head->doc_id;
         head = head->next;
-        
-        //system ("sleep 2");
     }
     
     return -1;
@@ -89,6 +99,12 @@ void QueryProcessor::clear_structures()
 {
     lexicon.clear();
     url_table.clear();
+}
+
+void QueryProcessor::close_query_lists(vector<node*> &inverted_lists)
+{
+    for( int i = 0; i < num_queries; i++ )
+        queries[i].close_list( inverted_lists[i] );
 }
 
 void QueryProcessor::collect_queries(string user_input)
@@ -149,7 +165,7 @@ void QueryProcessor::load_url_table()
         url_table[doc_id] = stats;
     }
 
-    cout << "[DONE]" << endl << endl;
+    cout << "[DONE]" << endl;
     url_table_file.close();
 }
 
