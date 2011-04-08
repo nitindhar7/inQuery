@@ -1,8 +1,8 @@
 CXX= g++
 CFLAGS=
-SRCS= Score.cpp Query.cpp QueryProcessor.cpp main.cpp
-OBJS= Score.o Query.o QueryProcessor.o main.o
-HDRS= page_stats.h Score.h QueryProcessor.h Query.h
+SRCS= MinHeap.cpp Score.cpp Query.cpp QueryProcessor.cpp main.cpp
+OBJS= MinHeap.o Score.o Query.o QueryProcessor.o main.o
+HDRS= page_stats.h MinHeap.h Score.h QueryProcessor.h Query.h
 BINS= inQuery
 
 all: $(BINS) done

@@ -37,6 +37,7 @@ vector<Query> & QueryProcessor::get_queries()
 void QueryProcessor::reset()
 {
     queries.clear();
+    inverted_lists.clear();
     num_queries = 0;
     max_doc_id = 0;
 }
@@ -56,7 +57,7 @@ int QueryProcessor::get_avg_doc_length()
     return avg_doc_length;
 }
 
-void QueryProcessor::set_max_doc_id(vector<node*> inverted_lists)
+void QueryProcessor::set_max_doc_id()
 {
     for( int i = 0; i < num_queries; i++ ) {
         node* temp = inverted_lists[i];
@@ -84,12 +85,12 @@ void QueryProcessor::set_avg_doc_length()
     cout << "[" << avg_doc_length << "]" << endl << endl;    
 }
 
-int QueryProcessor::next_geq(node* head, int doc_id)
+int QueryProcessor::next_geq(int index, int doc_id)
 {
-    while( head != NULL ) {
-        if( head->doc_id >= doc_id )
-            return head->doc_id;
-        head = head->next;
+    while( inverted_lists[index] != NULL ) {
+        if( inverted_lists[index]->doc_id >= doc_id )
+            return inverted_lists[index]->doc_id;
+        inverted_lists[index] = inverted_lists[index]->next;
     }
     
     return -1;
@@ -101,7 +102,7 @@ void QueryProcessor::clear_structures()
     url_table.clear();
 }
 
-void QueryProcessor::close_query_lists(vector<node*> &inverted_lists)
+void QueryProcessor::close_query_lists()
 {
     for( int i = 0; i < num_queries; i++ )
         queries[i].close_list( inverted_lists[i] );
@@ -119,10 +120,22 @@ void QueryProcessor::collect_queries(string user_input)
     }
 }
 
-void QueryProcessor::show_queries()
+int QueryProcessor::collect_inverted_lists()
 {
-    for( int i = 0; i < num_queries; i++ )
-        cout << i << ". " << queries[i].get_text() << endl;
+    int do_restart = 0;
+    
+    for( int i = 0; i < num_queries; i++ ) {
+        node* head = queries[i].open_list( lexicon );
+        
+        if( head == NULL ) {
+            do_restart = 1;
+            break;
+        }
+
+        inverted_lists.push_back( head );
+    }
+    
+    return do_restart;
 }
 
 void QueryProcessor::load_lexicon()
@@ -195,7 +208,7 @@ int QueryProcessor::get_doc_length(int doc_id)
     return ( *url_table_cursor ).second.page_size;
 }
 
-double QueryProcessor::calculate_rank(int doc_id, vector<node*> &inverted_list)
+double QueryProcessor::calculate_rank(int doc_id)
 {
     double page_rank = 0, temp_rank = 0;
     int total_pages = url_table.size();
@@ -207,7 +220,7 @@ double QueryProcessor::calculate_rank(int doc_id, vector<node*> &inverted_list)
         double log_result = 0,freq_result = 0;
 
         total_pages_with_queryword = queries[i].get_count();
-        freq_of_query_in_doc = queries[i].get_frequency(doc_id, inverted_list[i]);
+        freq_of_query_in_doc = queries[i].get_frequency(doc_id, inverted_lists[i]);
 
         log_result = log( (total_pages - freq_of_query_in_doc + 0.5) / ( freq_of_query_in_doc + 0.5) );
         freq_result = ( ( (CONSTANT_K + 1) * total_pages_with_queryword) / (K + total_pages_with_queryword) );
@@ -219,9 +232,13 @@ double QueryProcessor::calculate_rank(int doc_id, vector<node*> &inverted_list)
 
     return page_rank;
 }
-/*
+
 void QueryProcessor::add_to_heap(string url, int doc_id)
 {
     //add url and doc_id
 }
-*/
+
+vector<node*> & QueryProcessor::get_inverted_lists()
+{
+    return inverted_lists;
+}
