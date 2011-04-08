@@ -1,4 +1,4 @@
-#include <iostream>
+#include "config.h"
 #include "MinHeap.h"
 using namespace std;
 
@@ -9,7 +9,7 @@ MinHeap::MinHeap(int size)
 
 void MinHeap::push(Score score)
 {
-    if( heap.size() < max_size )
+    if( ( int )heap.size() < max_size )
         heap.push( score );
     else {
         if( heap.top().get_score() < score.get_score() ) {

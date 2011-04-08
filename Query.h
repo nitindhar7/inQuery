@@ -1,8 +1,7 @@
 #ifndef QUERY_H
 #define QUERY_H
 
-#include <iostream>
-#include <map>
+#include "config.h"
 using namespace std;
 
 struct node {

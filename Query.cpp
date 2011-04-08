@@ -1,7 +1,4 @@
-#include <iostream>
-#include <cstdlib>
-#include <fstream>
-#include <sstream>
+#include "config.h"
 #include "Query.h"
 using namespace std;
 
@@ -80,7 +77,7 @@ string Query::get_inverted_list(int offset)
 
 int Query::get_frequency(int document_id, node* head)
 {
-    int doc_id = 0, frequency = 0;
+    int frequency = 0;
 
     while( head->next != NULL ) {
         if( head->doc_id != document_id ) {

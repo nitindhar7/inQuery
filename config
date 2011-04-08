@@ -1,0 +1,121 @@
+#!/bin/sh
+
+INSTPATH="/usr/include/c++/4.4.1"
+
+echo "testing for ${INSTPATH}/iostream"
+if test -f ${INSTPATH}/iostream
+then
+	echo '#define HAVE_IOSTREAM_H 1' >> config.h
+	echo iostream 'found...'
+else
+	echo '#undef HAVE_IOSTREAM_H' >> config.h
+	echo iostream 'not found...'
+fi
+
+echo "testing for ${INSTPATH}/map"
+if test -f ${INSTPATH}/map
+then
+	echo '#define HAVE_MAP_H 1' >> config.h
+	echo map 'found...'
+else
+	echo '#undef HAVE_MAP_H' >> config.h
+	echo map 'not found...'
+fi
+
+echo "testing for ${INSTPATH}/sstream"
+if test -f ${INSTPATH}/sstream
+then
+	echo '#define HAVE_SSTREAM_H 1' >> config.h
+	echo sstream 'found...'
+else
+	echo '#undef HAVE_SSTREAM_H' >> config.h
+	echo sstream 'not found...'
+fi
+
+echo "testing for ${INSTPATH}/vector"
+if test -f ${INSTPATH}/vector
+then
+	echo '#define HAVE_VECTOR_H 1' >> config.h
+	echo vector 'found...'
+else
+	echo '#undef HAVE_VECTOR_H' >> config.h
+	echo vector 'not found...'
+fi
+
+echo "testing for ${INSTPATH}/algorithm"
+if test -f ${INSTPATH}/algorithm
+then
+	echo '#define HAVE_ALGORITHM_H 1' >> config.h
+	echo algorithm 'found...'
+else
+	echo '#undef HAVE_ALGORITHM_H' >> config.h
+	echo algorithm 'not found...'
+fi
+
+echo "testing for ${INSTPATH}/fstream"
+if test -f ${INSTPATH}/fstream
+then
+	echo '#define HAVE_FSTREAM_H 1' >> config.h
+	echo fstream 'found...'
+else
+	echo '#undef HAVE_FSTREAM_H' >> config.h
+	echo fstream 'not found...'
+fi
+
+echo "testing for ${INSTPATH}/cmath"
+if test -f ${INSTPATH}/cmath
+then
+	echo '#define HAVE_CMATH_H 1' >> config.h
+	echo cmath 'found...'
+else
+	echo '#undef HAVE_CMATH_H' >> config.h
+	echo cmath 'not found...'
+fi
+
+echo "testing for ${INSTPATH}/cstdlib"
+if test -f ${INSTPATH}/cstdlib
+then
+	echo '#define HAVE_CSTDLIB_H 1' >> config.h
+	echo cstdlib 'found...'
+else
+	echo '#undef HAVE_CSTDLIB_H' >> config.h
+	echo cstdlib 'not found...'
+fi
+
+echo "testing for ${INSTPATH}/queue"
+if test -f ${INSTPATH}/queue
+then
+	echo '#define HAVE_QUEUE_H 1' >> config.h
+	echo queue 'found...'
+else
+	echo '#undef HAVE_QUEUE_H' >> config.h
+	echo queue 'not found...'
+fi
+
+echo '#ifdef HAVE_IOSTREAM_H' >> config.h
+echo '#include <iostream>' >> config.h
+echo '#endif' >> config.h
+echo '#ifdef HAVE_MAP_H' >> config.h
+echo '#include <map>' >> config.h
+echo '#endif' >> config.h
+echo '#ifdef HAVE_SSTREAM_H' >> config.h
+echo '#include <sstream>' >> config.h
+echo '#endif' >> config.h
+echo '#ifdef HAVE_VECTOR_H' >> config.h
+echo '#include <vector>' >> config.h
+echo '#endif' >> config.h
+echo '#ifdef HAVE_ALGORITHM_H' >> config.h
+echo '#include <algorithm>' >> config.h
+echo '#endif' >> config.h
+echo '#ifdef HAVE_FSTREAM_H' >> config.h
+echo '#include <fstream>' >> config.h
+echo '#endif' >> config.h
+echo '#ifdef HAVE_CMATH_H' >> config.h
+echo '#include <cmath>' >> config.h
+echo '#endif' >> config.h
+echo '#ifdef HAVE_CSTDLIB_H' >> config.h
+echo '#include <cstdlib>' >> config.h
+echo '#endif' >> config.h
+echo '#ifdef HAVE_QUEUE_H' >> config.h
+echo '#include <queue>' >> config.h
+echo '#endif' >> config.h

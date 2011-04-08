@@ -1,7 +1,7 @@
 #ifndef SCORE_H
 #define SCORE_H
 
-#include <iostream>
+#include "config.h"
 using namespace std;
 
 class Score

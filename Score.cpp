@@ -1,4 +1,4 @@
-#include <iostream>
+#include "config.h"
 #include "Score.h"
 using namespace std;
 

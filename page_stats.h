@@ -1,7 +1,7 @@
 #ifndef PAGE_STATS_H
 #define PAGE_STATS_H
 
-#include <iostream>
+#include "config.h"
 using namespace std;
 
 struct page_stats {

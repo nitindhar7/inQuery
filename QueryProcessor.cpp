@@ -1,8 +1,5 @@
-#include <iostream>
-#include <fstream>
-#include <cmath>
+#include "config.h"
 #include "QueryProcessor.h"
-
 #define CONSTANT_K 1.2
 #define CONSTANT_B 0.75
 using namespace std;
@@ -227,11 +224,6 @@ double QueryProcessor::calculate_rank(int doc_id)
     }
 
     return page_rank;
-}
-
-void QueryProcessor::add_to_heap(string url, int doc_id)
-{
-    //add url and doc_id
 }
 
 vector<node*> & QueryProcessor::get_inverted_lists()

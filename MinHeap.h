@@ -1,8 +1,7 @@
 #ifndef MIN_HEAP_H
 #define MIN_HEAP_H
 
-#include <iostream>
-#include <queue>
+#include "config.h"
 #include "Score.h"
 using namespace std;
 

@@ -1,5 +1,4 @@
-#include <iostream>
-#include <map>
+#include "config.h"
 #include "Score.h"
 #include "MinHeap.h"
 #include "QueryProcessor.h"
@@ -32,7 +31,6 @@ int main()
         // CALC SCORES USING BM25, nextGEQ, freq, add to heap etc, etc
         int doc_id = 0;
         int new_doc_id = 0;
-        int frequency = 0;
         int max_doc_id = query_processor.get_max_doc_id();
         double bm25_score = 0;
         

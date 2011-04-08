@@ -1,11 +1,7 @@
 #ifndef QUERY_PROCESSOR_H
 #define QUERY_PROCESSOR_H
 
-#include <iostream>
-#include <sstream>
-#include <vector>
-#include <map>
-#include <algorithm>
+#include "config.h"
 #include "Query.h"
 #include "page_stats.h"
 using namespace std;
@@ -29,7 +25,6 @@ class QueryProcessor
         void close_query_lists();
         void reset();
         void set_avg_doc_length();
-        void add_to_heap(string, int);
         static void clear_structures();
         static int get_avg_doc_length();
         static map<string, int> & get_lexicon();
