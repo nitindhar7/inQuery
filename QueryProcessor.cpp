@@ -1,9 +1,5 @@
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 #include <fstream>
-#include <sstream>
 #include <cmath>
 #include "QueryProcessor.h"
 

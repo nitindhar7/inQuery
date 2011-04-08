@@ -1,14 +1,5 @@
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <map>
-#include <list>
-#include <vector>
-#include <algorithm>
-#include <string>
 #include "Score.h"
 #include "MinHeap.h"
 #include "QueryProcessor.h"
@@ -45,20 +36,15 @@ int main()
         int max_doc_id = query_processor.get_max_doc_id();
         double bm25_score = 0;
         
-        if( query_processor.get_num_queries() == 1 ) {
-        
-            while( doc_id <= max_doc_id ) {
-                doc_id = query_processor.next_geq( 0, doc_id );
+        while( doc_id <= max_doc_id ) {
+            doc_id = query_processor.next_geq( 0, doc_id );
+
+            if( query_processor.get_num_queries() == 1 ) {
                 bm25_score = query_processor.calculate_rank( doc_id );
                 results_heap.push( Score( query_processor.get_url( doc_id ), bm25_score ) );
                 doc_id++;
             }
-            
-        }
-        else {
-            while( doc_id <= max_doc_id ) {
-                doc_id = query_processor.next_geq( 0, doc_id );
-                
+            else {
                 if( doc_id == -1 )
                     break;
 
@@ -80,7 +66,7 @@ int main()
 
         query_processor.close_query_lists();
         query_processor.reset();
-        cout << endl;
+        cout << endl << endl;
     }
 
     return 0;
@@ -97,6 +83,8 @@ string search_or_quit()
 
     if( !user_input.compare( "quit" ) )
         exit( 0 );
+        
+    cout << "-----------------------------------------------------------------------" << endl;
 
     return user_input;
 }
