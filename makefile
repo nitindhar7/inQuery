@@ -27,10 +27,13 @@ $(BINS): $(OBJS) $(HDRS)
 $(OBJS): $(SRCS) $(HDRS)
 	$(CXX) -c $(CFLAGS) $(SRCS)
 
-.PHONY: clean run done
+.PHONY: clean clean_all run
 
 clean:
 	rm *.o $(BINS)
+
+clean_all:
+	rm *.o $(BINS) config.h
 
 run:
 	./$(BINS)
