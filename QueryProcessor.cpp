@@ -74,7 +74,7 @@ void QueryProcessor::set_avg_doc_length()
     int total_length = 0;
     map<int, page_stats>::iterator url_table_cursor;
     
-    cout << "* Calculating Average Document Length... ";
+    cout << "* Average Document Length... ";
     
     for( url_table_cursor = url_table.begin(); url_table_cursor != url_table.end(); url_table_cursor++ )
         total_length += ( *url_table_cursor ).second.page_size;
@@ -188,25 +188,38 @@ string QueryProcessor::get_url(int doc_id)
     return ( *url_table_cursor ).second.url;
 }
 
-/*
-double QueryProcessor::calculate_rank(int doc_id)
+int QueryProcessor::get_doc_length(int doc_id)
 {
-    int total_pages, total_pages_with_queryword, freq_of_query_in_doc, doc_length;
-    double K, page_rank, log_result,freq_result,avg_doc_length;
+    map<int, page_stats>::iterator url_table_cursor;
+    url_table_cursor = url_table.find( doc_id );
+    return ( *url_table_cursor ).second.page_size;
+}
 
-    K = CONSTANT_K* ( (1-CONSTANT_B) + ( CONSTANT_B * (doc_length/avg_doc_length) ) );
+double QueryProcessor::calculate_rank(int doc_id, vector<node*> &inverted_list)
+{
+    double page_rank = 0, temp_rank = 0;
+    int total_pages = url_table.size();
+    int doc_length = get_doc_length(doc_id);
+    double K = CONSTANT_K* ( (1-CONSTANT_B) + ( CONSTANT_B * (doc_length/avg_doc_length) ) );
 
-    total_pages_with_queryword = Query.count();
-    freq_of_query_in_doc = Query.get_frequency();
+    for( int i = 0; i < num_queries; i++ ) {
+        int total_pages_with_queryword = 0, freq_of_query_in_doc = 0;
+        double log_result = 0,freq_result = 0;
 
-    log_result = log( (total_pages - freq_of_query_in_doc + 0.5) / ( freq_of_query_in_doc + 0.5) );
-    freq_result = ( ((CONSTANT_K+1) * total_pages_with_queryword) / (K+total_pages_with_queryword) );
+        total_pages_with_queryword = queries[i].get_count();
+        freq_of_query_in_doc = queries[i].get_frequency(doc_id, inverted_list[i]);
 
-    page_rank = log_result * freq_result;
+        log_result = log( (total_pages - freq_of_query_in_doc + 0.5) / ( freq_of_query_in_doc + 0.5) );
+        freq_result = ( ( (CONSTANT_K + 1) * total_pages_with_queryword) / (K + total_pages_with_queryword) );
+
+        temp_rank = log_result * freq_result;
+
+        page_rank = page_rank + temp_rank;
+    }
 
     return page_rank;
 }
-
+/*
 void QueryProcessor::add_to_heap(string url, int doc_id)
 {
     //add url and doc_id

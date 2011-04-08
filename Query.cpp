@@ -22,6 +22,9 @@ node* Query::open_list(map<string, int> &lexicon)
     node* head = NULL;
 
     offset = get_offset( lexicon );
+    if( offset == -1 )
+        return NULL;
+    
     inverted_list = get_inverted_list( offset );
 
     stringstream parseable_inverted_list( inverted_list );
@@ -55,6 +58,12 @@ int Query::get_offset(map<string, int> &lexicon)
 {
     map<string, int>::iterator lexicon_cursor;
     lexicon_cursor = lexicon.find( text );
+    
+    if( lexicon_cursor == lexicon.end() ) {
+        cout << "No Results Found" << endl << endl;
+        return -1;
+    }
+    
     return ( *lexicon_cursor ).second;
 }
 

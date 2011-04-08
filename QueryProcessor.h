@@ -28,8 +28,9 @@ class QueryProcessor
         void close_query_lists(vector<node*> &);
         void reset();
         void set_avg_doc_length();
-        /*double calculate_rank(int);
-        void add_to_heap(string, int);*/
+        double calculate_rank(int, vector<node*> &);
+        int get_doc_length(int);
+        //void add_to_heap(string, int);
         
         // for all query processors
         static void clear_structures();
